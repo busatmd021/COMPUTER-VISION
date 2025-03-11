@@ -19,3 +19,34 @@ This repository contains coursework, assignments, and project work for my **Comp
 - **Libraries & Frameworks**: OpenCV, NumPy, TensorFlow/PyTorch  
 
 This repo will be regularly updated with code implementations, reports, and insights from my coursework. Stay tuned! 🚀  
+
+
+
+
+## **How to get Libraries in a Virtual Enviroment**
+### **Create a New Virtual Environment:**
+```bash
+python3 -m venv pytorch-env
+```
+</br>
+
+### **Activate the Virtual Environment:**
+```bash
+source pytorch-env/bin/activate
+```
+*Your prompt should change to something like:*
+```bash
+(pytorch-env) user@your-system:~$
+```
+</br>
+
+### **Install PyTorch in the Virtual Environment:**
+```bash
+pip install torch torchvision torchaudio
+```
+</br>
+
+### **When you are Finished using PyTorch:**
+```bash
+deactivate
+```
