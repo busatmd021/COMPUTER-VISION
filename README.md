@@ -33,10 +33,10 @@ python3 -m venv pytorch-env
 ```bash
 source pytorch-env/bin/activate
 ```
-*Your prompt should change to something like:*
-```bash
-(pytorch-env) user@your-system:~$
-```
+  *Your prompt should change to something like:*
+  ```bash
+  (pytorch-env) user@your-system:~$
+  ```
 
 ### **Install PyTorch in the Virtual Environment:**
 ```bash
