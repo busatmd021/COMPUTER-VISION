@@ -38,102 +38,128 @@ def print_stats(image):
     return None
 
 
+
 # TASK 2
 def crop(image, start_row, start_col, num_rows, num_cols):
     """Crop an image based on the specified bounds. Use array slicing.
-
     Inputs:
         image: numpy array of shape(image_height, image_width, 3).
         start_row (int): The starting row index 
         start_col (int): The starting column index 
         num_rows (int): Number of rows in our cropped image.
         num_cols (int): Number of columns in our cropped image.
-
     Returns:
         out: numpy array of shape(num_rows, num_cols, 3).
     """
-
     out = None
 
-    ### YOUR CODE HERE
-
+    # Use Array Slicing to Remove Everyhting Outside the Specified Range
+    end_row, end_col = (start_row + num_rows), (start_col + num_cols)
+    out = image[start_row:end_row, start_col:end_col]
     return out
 
 
 def change_contrast(image, factor):
-    """Change the value of every pixel by following
-
-                        x_n = factor * (x_p - 0.5) + 0.5
-
-    where x_n is the new value and x_p is the original value.
-    Assumes pixel values between 0.0 and 1.0 
-    If you are using values 0-255, change 0.5 to 128.
-
+    """Change the value of every pixel by following x_n = factor * (x_p - 0.5) + 0.5,
+        where x_n is the new value and x_p is the original value. 
+        - Assumes pixel values between 0.0 and 1.0 
+        - If you are using values 0-255, change 0.5 to 128.
     Inputs:
         image: numpy array of shape(image_height, image_width, 3).
         factor (float): contrast adjustment
-
     Returns:
         out: numpy array of shape(image_height, image_width, 3).
     """
-
     out = None
 
-    ### YOUR CODE HERE
+    # Change the Value of the Pixels by the Given Factor
+    contrast = factor * (image - 0.5) + 0.5
 
+    # Ensure Pixel Values are Within the Valid Range [0.0, 1.0]
+    out = np.clip(contrast, 0.0, 1.0)
     return out
 
 
 def resize(input_image, output_rows, output_cols):
     """Resize an image using the nearest neighbor method.
-    i.e. for each output pixel, use the value of the nearest input pixel after scaling
-
+        i.e. for each output pixel, use the value of the nearest input pixel after scaling
     Inputs:
-        input_image: RGB image stored as an array, with shape
-            `(input_rows, input_cols, 3)`.
+        input_image: RGB image stored as an array, with shape `(input_rows, input_cols, 3)`.
         output_rows (int): Number of rows in our desired output image.
         output_cols (int): Number of columns in our desired output image.
-
     Returns:
         np.ndarray: Resized image, with shape `(output_rows, output_cols, 3)`.
     """
     out = None
-    
+
+    # Resize Each Pixel Using a Factor of its Neighbours
+    input_row, input_col, _ = input_image.shape
+
+    # Initialise an Empty Output Image with the Desired Shape
+    out = np.zeros((output_rows, output_cols, input_image.shape[2]), dtype=np.float32)
+
+    # Calculate Scaling Factors
+    scale_row = input_row / output_rows
+    scale_col = input_col / output_cols
+
+    # Find the New Pixel Values
+    for i in range(output_rows):
+        for j in range(output_cols):
+            # Find Corresponding Pixel in Input Image
+            row_val = int(round(i * scale_row))
+            col_val = int(round(j * scale_col))
+
+            # Ensure the Indicies are Valid
+            row_val = min(max(row_val, 0), input_row - 1)
+            col_val = min(max(col_val, 0), input_col - 1)
+
+            # Add to New Image
+            out[i,j] = input_image[row_val, col_val]
+   
     return out
+
 
 def greyscale(input_image):
     """Convert a RGB image to greyscale. 
-    A simple method is to take the average of R, G, B at each pixel.
-    Or you can look up more sophisticated methods online.
-    
+        A simple method is to take the average of R, G, B at each pixel.
+        Or you can look up more sophisticated methods online.
     Inputs:
         input_image: RGB image stored as an array, with shape
             `(input_rows, input_cols, 3)`.
-
     Returns:
         np.ndarray: Greyscale image, with shape `(output_rows, output_cols)`.
     """
     out = None
 
+    # Extract R, G, B Channels
+    image_red = input_image[..., 0]
+    image_green = input_image[..., 1]
+    image_blue = input_image[..., 2]
+    
+    # Apply the Weighted Average (Luminosity Method)
+    out = 0.299 * image_red + 0.587 * image_green + 0.114 * image_blue
     return out
+
 
 def binary(grey_img, threshold):
     """Convert a greyscale image to a binary mask with threshold.
-
                     x_out = 0, if x_in < threshold
                     x_out = 1, if x_in >= threshold
-
     Inputs:
-        input_image: Greyscale image stored as an array, with shape
-            `(image_height, image_width)`.
+        input_image: Greyscale image stored as an array, with shape `(image_height, image_width)`.
         threshold (float): The threshold used for binarization, and the value range of threshold is from 0 to 1
     Returns:
         np.ndarray: Binary mask, with shape `(image_height, image_width)`.
     """
     out = None
-    
+
+    # Apply the Threshold to the Entire Image
+    out = (grey_img >= threshold).astype(np.float32) # creates a boolean array where each element is True or False. Convert boolean array into a binary.
     return out
 
+
+
+# TASK 3
 def conv2D(image, kernel):
     """ Convolution of a 2D image with a 2D kernel. 
     Convolution is applied to each pixel in the image.
