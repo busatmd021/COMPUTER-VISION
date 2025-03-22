@@ -4,6 +4,8 @@
 import math
 import numpy as np
 from skimage import io
+import matplotlib.pyplot as plt
+
 
 # TASK 1
 def load(img_path):
@@ -26,7 +28,7 @@ def print_stats(image):
         image: numpy array of shape(image_height, image_width, n_channels).
     Returns: none 
     """
-    # Check if the image is grayscale (2D) or RGB (3D)
+    # Check if the image is Grayscale (2D) or RGB (3D)
     if len(image.shape) == 3:
         height, width, channels = image.shape
         print(f"Height: {height}, Width: {width}, Channels: {channels}")
@@ -159,34 +161,61 @@ def binary(grey_img, threshold):
 
 
 
-# TASK 3
+# TASK 3.1a
 def conv2D(image, kernel):
     """ Convolution of a 2D image with a 2D kernel. 
     Convolution is applied to each pixel in the image.
     Assume values outside image bounds are 0.
-    
     Args:
         image: numpy array of shape (Hi, Wi).
         kernel: numpy array of shape (Hk, Wk). Dimensions will be odd.
-
     Returns:
         out: numpy array of shape (Hi, Wi).
     """
     out = None
-    ### YOUR CODE HERE
 
+    # Initalise Variables
+    numRow, numCol = image.shape
+    kerRow, kerCol = kernel.shape
+    out = np.zeros((numRow, numCol))
+
+    # Flip the kernel for convolution
+    kernel = np.flip(kernel, axis=(0,1))
+
+    # Iterate over every Pixel in the Image
+    for x in range(numRow):
+        for y in range(numCol):
+            # Reset Total for each Pixel
+            total = 0  
+            
+            # Iterate over the Kernel
+            for i in range(-(kerRow // 2), (kerRow // 2) + 1):
+                for j in range(-(kerCol // 2), (kerCol // 2) + 1):
+                    # Compute the Corresponding Pixel in the Image
+                    row = x + i
+                    col = y + j
+
+                    # Bounds Checking
+                    if row < 0 or row >= numRow or col < 0 or col >= numCol:
+                        total += 0
+                    else:
+                        total += image[row, col] * kernel[i + (kerRow // 2), j + (kerCol // 2)]
+            
+            # Store Result in Output Array
+            out[x, y] = total
+
+    # Return the Result
     return out
+
 
 def test_conv2D():
     """ A simple test for your 2D convolution function.
         You can modify it as you like to debug your function.
-    
     Returns:
         None
     """
 
-    # Test code written by 
-    # Simple convolution kernel.
+    # Simple Convolution Kernel
     kernel = np.array(
     [
         [1,0,1],
@@ -194,14 +223,14 @@ def test_conv2D():
         [1,0,0]
     ])
 
-    # Create a test image: a white square in the middle
+    # Create a Test Image: A White Square in the middle
     test_img = np.zeros((9, 9))
     test_img[3:6, 3:6] = 1
 
-    # Run your conv_nested function on the test image
+    # Run your conv_nested Function on the Test Image
     test_output = conv2D(test_img, kernel)
 
-    # Build the expected output
+    # Build the Expected Output
     expected_output = np.zeros((9, 9))
     expected_output[2:7, 2:7] = 1
     expected_output[5:, 5:] = 0
@@ -209,31 +238,90 @@ def test_conv2D():
     expected_output[2:5, 4] = 2
     expected_output[4, 4] = 3
 
-    # Test if the output matches expected output
+    # Test if the Output Matches Expected Output
     assert np.max(test_output - expected_output) < 1e-10, "Your solution is not correct."
 
+    # If Assertion Passes, Print Success Message
+    print("Greyscale Test passed!")
 
+
+
+# TASK 3.1b
 def conv(image, kernel):
-    """Convolution of a RGB or grayscale image with a 2D kernel
-    
+    """Convolution of a RGB or grayscale image with a 2D kernel  
     Args:
         image: numpy array of shape (Hi, Wi, 3) or (Hi, Wi)
         kernel: numpy array of shape (Hk, Wk). Dimensions will be odd.
-
     Returns:
         out: numpy array of shape (Hi, Wi, 3) or (Hi, Wi)
     """
     out = None
-    ### YOUR CODE HERE
 
+     # Check if Image is Grayscale or RGB
+    if len(image.shape) == 2:
+        # Grayscale image 
+        numRow, numCol = image.shape
+        out = np.zeros((numRow, numCol))
+
+        # Apply Convolution Directly
+        out = conv2D(image, kernel)  
+
+    else: 
+        # Initalise an Output Array
+        numRow, numCol, channels = image.shape
+        out = np.zeros((numRow, numCol, channels))
+
+        # Run the Convolution Function on Each Channel
+        for c in range(channels):
+            out[..., c] = conv2D(image[..., c], kernel)
+
+    # Return the Result
     return out
 
     
-def gauss2D(size, sigma):
+def test_conv_RGB():
+    """A test for the 2D convolution function with RGB images.
+    Returns:
+        None
+    """
 
+    # Simple Convolution Kernel
+    kernel = np.array([
+        [1, 0, 1],
+        [0, 0, 0],
+        [1, 0, 0]
+    ])
+
+    # Create a Test RGB Image: A White Square in the Middle
+    # 3 Channels for RGB
+    test_img = np.zeros((9, 9, 3))  
+
+    # White Square in all Channels
+    test_img[3:6, 3:6, :] = 1  
+
+    # Run Your conv Function on the Test Image
+    test_output = conv(test_img, kernel)
+
+    # Build the Expected Output for Each Channel
+    expected_output = np.zeros((9, 9, 3))
+    expected_output[2:7, 2:7, :] = 1
+    expected_output[5:, 5:, :] = 0
+    expected_output[4, 2:5, :] = 2
+    expected_output[2:5, 4, :] = 2
+    expected_output[4, 4, :] = 3
+
+    # Test if the Output Matches Expected Output for Each Channel
+    assert np.max(test_output - expected_output) < 1e-10, "Your solution is not correct."
+
+    # If Assertion Passes, Print Success Message
+    print("RGB Test passed!")
+
+
+
+# TASK 3.2
+def gauss2D(size, sigma):
     """Function to mimic the 'fspecial' gaussian MATLAB function.
        You should not need to edit it.
-       
     Args:
         size: filter height and width
         sigma: std deviation of Gaussian
@@ -241,12 +329,79 @@ def gauss2D(size, sigma):
     Returns:
         numpy array of shape (size, size) representing Gaussian filter
     """
-
     x, y = np.mgrid[-size//2 + 1:size//2 + 1, -size//2 + 1:size//2 + 1]
     g = np.exp(-((x**2 + y**2)/(2.0*sigma**2)))
     return g/g.sum()
+
+
+
+# TASK 3.3
+def normalize(image):
+    """Normalize an image to the range [0,1]."""
+    return (image - np.min(image)) / (np.max(image) - np.min(image) + 1e-8)  # Avoid division by zero
+
+
+def display_edge_images(pictures, titles, rows, cols):
+    """
+    Display edge detection images in a grid with customizable titles.
+    Parameters:
+    - pictures: List of images to display in the grid.
+    - titles: List of titles corresponding to the images.
+    - rows: Number of rows in the subplot grid.
+    - cols: Number of columns in the subplot grid.
+    """
+    if len(pictures) != len(titles):
+        raise ValueError("The number of pictures must match the number of titles.")
     
+    fig, axes = plt.subplots(rows, cols, figsize=(12, 8))
     
+    # Flatten the Axes Array to Iterate Over Easily
+    axes = axes.flatten()
+    
+    for i in range(len(pictures)):
+        axes[i].imshow(pictures[i], cmap='gray')
+        axes[i].set_title(titles[i])
+        axes[i].axis('off')
+    
+    plt.tight_layout()
+    plt.show()
+
+
+
+# TASK 4
+def display_pyramid(image, kernel, variance):
+    # Display the Original Image
+    width, height, _ = image.shape
+
+    # Create a Figure with Multiple Subplots (1 row, 5 columns)
+    fig, axes = plt.subplots(1, 5, figsize=(15, 5))
+
+    # Show the Original Image in the First Subplot
+    axes[0].imshow(image)
+    axes[0].set_title("Original Image")
+    axes[0].axis("off")
+
+    # Build a Gaussian Pyramid & Show Images in the Remaining Subplots
+    for i in range(1, 5):
+        # Apply Gaussian Blur
+        blur_image = conv(image, gauss2D(kernel, variance))  
+
+        # Calculate New Factor & Resize
+        factor = 1 / (2 ** i)
+        resized_portrait = resize(blur_image, int(factor * width), int(factor * height))
+
+        # Display in Subplot
+        axes[i].imshow(resized_portrait)
+        axes[i].set_title(f"1/{2**i} of Original")
+        axes[i].axis("off")
+
+    # Adjust Layout & Show the Figure
+    plt.tight_layout()
+    plt.show()
+
+
+
+# TASK 5
 def LoG2D(size, sigma):
 
     """
