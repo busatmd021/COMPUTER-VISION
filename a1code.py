@@ -55,7 +55,7 @@ def crop(image, start_row, start_col, num_rows, num_cols):
     """
     out = None
 
-    # Use Array Slicing to Remove Everyhting Outside the Specified Range
+    # Use Array Slicing to Remove Everything Outside the Specified Range
     end_row, end_col = (start_row + num_rows), (start_col + num_cols)
     out = image[start_row:end_row, start_col:end_col]
     return out
@@ -83,7 +83,7 @@ def change_contrast(image, factor):
 
 
 def resize(input_image, output_rows, output_cols):
-    """Resize an image using the nearest neighbor method.
+    """Resize an image using the nearest neighbour method.
         i.e. for each output pixel, use the value of the nearest input pixel after scaling
     Inputs:
         input_image: RGB image stored as an array, with shape `(input_rows, input_cols, 3)`.
@@ -111,7 +111,7 @@ def resize(input_image, output_rows, output_cols):
             row_val = int(round(i * scale_row))
             col_val = int(round(j * scale_col))
 
-            # Ensure the Indicies are Valid
+            # Ensure the Indices are Valid
             row_val = min(max(row_val, 0), input_row - 1)
             col_val = min(max(col_val, 0), input_col - 1)
 
@@ -174,12 +174,12 @@ def conv2D(image, kernel):
     """
     out = None
 
-    # Initalise Variables
+    # Initialise Variables
     numRow, numCol = image.shape
     kerRow, kerCol = kernel.shape
     out = np.zeros((numRow, numCol))
 
-    # Flip the kernel for convolution
+    # Flip the Kernel for Convolution
     kernel = np.flip(kernel, axis=(0,1))
 
     # Iterate over every Pixel in the Image
@@ -267,7 +267,7 @@ def conv(image, kernel):
         out = conv2D(image, kernel)  
 
     else: 
-        # Initalise an Output Array
+        # Initialise an Output Array
         numRow, numCol, channels = image.shape
         out = np.zeros((numRow, numCol, channels))
 
@@ -350,6 +350,7 @@ def display_edge_images(pictures, titles, rows, cols):
     - rows: Number of rows in the subplot grid.
     - cols: Number of columns in the subplot grid.
     """
+    # Error Checking
     if len(pictures) != len(titles):
         raise ValueError("The number of pictures must match the number of titles.")
     
@@ -403,23 +404,50 @@ def display_pyramid(image, kernel, variance):
 
 # TASK 5
 def LoG2D(size, sigma):
-
     """
-       
     Args:
         size: filter height and width
-        sigma: std deviation of Gaussian
-        
+        sigma: std deviation of Gaussian 
     Returns:
         numpy array of shape (size, size) representing LoG filter
     """
-
-    # use 2D Gaussian filter defination above 
-    # it creates a kernel indices from -size//2 to size//2 in each direction, to write a LoG you use the same indices.  
+    # Use the 2D Gaussian Filter Definition from Part 4 Above 
     x, y = np.mgrid[-size//2 + 1:size//2 + 1, -size//2 + 1:size//2 + 1]
-    # Please write a correct function below by replacing the Gaussian equation (i.e. the right term of the equation) to implement your LoG filters.
-    # your code goes here for Q5
-    # return g/g.sum()
+
+    # Compute Laplacian of Gaussian (LoG)
+    factor = (x**2 + y**2) / (2 * sigma**2)
+    LoG = (1 - factor) * np.exp(-factor) / (np.pi * sigma**4)
+
+    # Normalise to Sum to Zero
+    LoG -= LoG.mean()
+
+    # Return the Result
+    return LoG
 
 
+def rotate(image):
+    """Simple Function to rotate an Image by 90 degrees and pass it back."""
 
+    # If it is a Coloured Image
+    if len(image.shape) == 3:
+        # Initialise Image Array
+        rotated_image = np.zeros_like(image.transpose(1, 0, 2))
+
+        # Rotate Each Channel Independently
+        for c in range(image.shape[2]):
+                # Transpose the Image (Rows become Columns)
+                transposed_image = image[..., c].T
+
+                # Reverse Each Row
+                rotated_image[..., c] = transposed_image[::-1]
+
+    # The Image must be Greyscale
+    else:
+        # Transpose the Image (Rows become Columns)
+        transposed_image = image.T
+
+        # Reverse Each Row
+        rotated_image = transposed_image[::-1]
+    
+    # Return the Rotated Image
+    return rotated_image
