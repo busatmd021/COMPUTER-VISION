@@ -370,7 +370,7 @@ def display_edge_images(pictures, titles, rows, cols):
 
 
 # TASK 4
-def display_pyramid(image, kernel, variance):
+def display_pyramid(image, kernel, variance, title):
     """
     Displays a Gaussian pyramid where the original image is on the left 
     and the progressively smaller images are stacked in a column to its right.
@@ -386,7 +386,7 @@ def display_pyramid(image, kernel, variance):
     pyramid = [image]  
 
     # Build a Gaussian Pyramid
-    for i in range(0, 5):
+    for i in range(1, 5):
         # Apply Gaussian Blur
         blur_image = conv(image, gauss2D(kernel, variance))  
 
@@ -398,29 +398,29 @@ def display_pyramid(image, kernel, variance):
         pyramid.append(resized_portrait)
     
     # Determine Dimensions for the Composite Image
-    rows, cols = pyramid[0].shape                                     # Original Image Dimensions
-    composite_rows = max(rows, sum(p.shape[0] for p in pyramid[1:]))  # Tall Enough for Stacking
-    composite_cols = cols + pyramid[1].shape[1]                       # Original Width + First Downsample Width
+    composite_rows = max(image.shape[0], sum(p.shape[0] for p in pyramid[1:]))  
+    composite_cols = image.shape[1] + max(p.shape[1] for p in pyramid[1:])  
 
     # Create a Blank Composite Image
-    composite_image = np.zeros((composite_rows, composite_cols), dtype=np.float64)
+    composite_image = np.zeros((composite_rows, composite_cols, 3), dtype=np.float64)
 
     # Place the Original Image on the Left
-    composite_image[:rows, :cols] = pyramid[0]
+    composite_image[:image.shape[0], :image.shape[1], :] = image
 
     # Stack the Downsampled Images to the Right
     i_row = 0
     for p in pyramid[1:]:
-        n_rows, n_cols = p.shape
-        composite_image[i_row:i_row + n_rows, cols:cols + n_cols] = p
+        n_rows, n_cols, _ = p.shape
+        composite_image[i_row:i_row + n_rows, image.shape[1]:image.shape[1] + n_cols, :] = p
         i_row += n_rows
 
     # Display the Composite Image
     plt.figure(figsize=(10, 6))
-    plt.imshow(composite_image, cmap="gray")
+    plt.imshow(composite_image)
+    plt.title(title)
     plt.axis("off")
     plt.show()
-        
+
 
 
 # TASK 5
