@@ -371,19 +371,22 @@ def display_edge_images(pictures, titles, rows, cols):
 
 # TASK 4
 def display_pyramid(image, kernel, variance):
-    # Display the Original Image
+    """
+    Displays a Gaussian pyramid where the original image is on the left 
+    and the progressively smaller images are stacked in a column to its right.
+
+    Parameters:
+        image (numpy array): The input image.
+        levels (int): Number of pyramid levels.
+    """
+    # Get Dimensions of Orignal Image
     width, height, _ = image.shape
+    
+    # Store Images for Display
+    pyramid = [image]  
 
-    # Create a Figure with Multiple Subplots (1 row, 5 columns)
-    fig, axes = plt.subplots(1, 5, figsize=(15, 5))
-
-    # Show the Original Image in the First Subplot
-    axes[0].imshow(image)
-    axes[0].set_title("Original Image")
-    axes[0].axis("off")
-
-    # Build a Gaussian Pyramid & Show Images in the Remaining Subplots
-    for i in range(1, 5):
+    # Build a Gaussian Pyramid
+    for i in range(0, 5):
         # Apply Gaussian Blur
         blur_image = conv(image, gauss2D(kernel, variance))  
 
@@ -391,15 +394,33 @@ def display_pyramid(image, kernel, variance):
         factor = 1 / (2 ** i)
         resized_portrait = resize(blur_image, int(factor * width), int(factor * height))
 
-        # Display in Subplot
-        axes[i].imshow(resized_portrait)
-        axes[i].set_title(f"1/{2**i} of Original")
-        axes[i].axis("off")
+        # Add to Images Store
+        pyramid.append(resized_portrait)
+    
+    # Determine Dimensions for the Composite Image
+    rows, cols = pyramid[0].shape                                     # Original Image Dimensions
+    composite_rows = max(rows, sum(p.shape[0] for p in pyramid[1:]))  # Tall Enough for Stacking
+    composite_cols = cols + pyramid[1].shape[1]                       # Original Width + First Downsample Width
 
-    # Adjust Layout & Show the Figure
-    plt.tight_layout()
+    # Create a Blank Composite Image
+    composite_image = np.zeros((composite_rows, composite_cols), dtype=np.float64)
+
+    # Place the Original Image on the Left
+    composite_image[:rows, :cols] = pyramid[0]
+
+    # Stack the Downsampled Images to the Right
+    i_row = 0
+    for p in pyramid[1:]:
+        n_rows, n_cols = p.shape
+        composite_image[i_row:i_row + n_rows, cols:cols + n_cols] = p
+        i_row += n_rows
+
+    # Display the Composite Image
+    plt.figure(figsize=(10, 6))
+    plt.imshow(composite_image, cmap="gray")
+    plt.axis("off")
     plt.show()
-
+        
 
 
 # TASK 5
