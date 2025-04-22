@@ -1,10 +1,12 @@
 ### ASSIGNMENT 2 CODE TO SUPPORT NOTEBOOK
 
-# Import Libraries
+# ---------- Import Libraries ----------
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
 
+
+# ---------- PART 1 ----------
 def display_matching_results(img1_kp, img2_kp, matched_img, title_suffix="", matches=None, features=None):
     """
     Displays keypoints and matched keypoints in a clean 2-row layout.
@@ -109,3 +111,7 @@ def display_side_by_side(img1, img2, title1="Left Image", title2="Right Image", 
     # Adjust Layout for Better Spacing
     plt.tight_layout(rect=[0, 0, 1, 0.93])
     plt.show()
+
+
+
+# ---------- PART 2 ----------
