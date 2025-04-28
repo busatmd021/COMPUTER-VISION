@@ -286,6 +286,40 @@ def identify_query_object_cached_all(qimg, ref_cache, orb_features=500):
     return matches
 
 
+def draw_inlier_matches(img1, img2, kp1, kp2, matches, mask):
+    """
+    Draws lines between inlier matched keypoints of two images side-by-side.
+
+    Parameters:
+        img1 (ndarray): First input image (Reference).
+        img2 (ndarray): Second input image (Query).
+        kp1 (list): Keypoints from img1.
+        kp2 (list): Keypoints from img2.
+        matches (list): List of all matches (DMatch objects).
+        mask (list/array): Mask from RANSAC, 1 = inlier, 0 = outlier.
+        
+    Returns:
+        img_matches (ndarray): Combined image with inlier matches drawn.
+    """
+    # Create Output Image Showing Two Images Side By Side
+    h1, w1 = img1.shape[:2]
+    h2, w2 = img2.shape[:2]
+    out_img = np.zeros((max(h1, h2), w1 + w2, 3), dtype=np.uint8)
+    out_img[:h1, :w1] = img1
+    out_img[:h2, w1:] = img2
+
+    # Draw Inlier Matches
+    for m, inlier in zip(matches, mask.ravel()):
+        if inlier:  # Only Draw Inliers
+            pt1 = (int(kp1[m.queryIdx].pt[0]), int(kp1[m.queryIdx].pt[1]))
+            pt2 = (int(kp2[m.trainIdx].pt[0] + w1), int(kp2[m.trainIdx].pt[1]))  # Shift pt2 x-coord
+            color = tuple(np.random.randint(0, 255, 3).tolist())
+            cv2.line(out_img, pt1, pt2, color, 1, cv2.LINE_AA)
+
+    return out_img
+
+
+
 # ---------- PART 3 ----------
 def identify_query_object_cached_fmatrix(query_img, reference_cache, orb_features=1500, threshold=10):
     """
