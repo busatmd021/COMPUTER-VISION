@@ -1,29 +1,32 @@
-# 📄 **Assignment 2 – Feature Matching & Epipolar Geometry**
-This assignment explores key computer vision techniques used for image matching and geometric transformations. The notebook demonstrates the following tasks using OpenCV and matplotlib:
+# 📄 **Assignment 3 – Neural Network for Computer Vision using PyTorch**
+This assignment focuses on constructing and training a simple neural network using PyTorch for a basic computer vision task. It also includes a concise report analyzing the model’s performance and architecture decisions.
 <br/><br/>
 
 ## 🔍 **What’s Included**
-- **Keypoint Detection & Matching**: Detects and matches features between a reference and query image using descriptors like ORB/SIFT.
-- **Homography Estimation**: Computes the transformation between images using RANSAC.
-- **Outline Projection**: Projects the outline of the reference image onto the query image using the estimated homography.
-- **Inlier Visualization**: Draws only the inlier matches post-RANSAC filtering.
-- **Epipolar Geometry**: Visualizes epipolar lines and corresponding matched points between stereo images.
+- **Dataset Preparation:** Loading and preprocessing image data for training and evaluation.
+- **Neural Network Architecture:** Implementing a custom feedforward neural network using PyTorch’s nn.Module.
+- **Training Loop:** Writing a training loop using PyTorch’s optimiser and loss modules.
+- **Evaluation:** Measuring performance on a test dataset using metrics such as accuracy or loss.
+- **Visualisation:** Displaying training loss curves and sample predictions for analysis.
+- **Report:** Discussion of architecture, training results, and any challenges encountered.
 <br/>
 
 ## 🧰 **Files & Functions**
-- `draw_outline(...)`: Projects the reference image’s corners onto the query image using a homography.
-- `draw_inliers(...)`: Displays the inlier matches between two images after filtering.
-- `drawlines(...)`: Visualizes the epipolar lines corresponding to matched points.
+- **SimpleNet:** Defines the architecture of the neural network *(**e.g.** fully connected layers, activation functions).*
+- `train_model(...)`: Handles model training, loss calculation, and optimisation steps.
+- `evaluate_model(...)`: Tests the trained model and generates evaluation metrics.
+- `plot_results(...)`: Plots training metrics and visual output samples.
 <br/>
 
 ## 🧪 **Requirements**
 - Python 3.x
-- OpenCV (`cv2`)
+- PyTorch
 - NumPy
 - Matplotlib
+- *(Optional)* OpenCV or torchvision, depending on preprocessing requirements
 <br/>
 
 ## 🚀 **How to Run**
-1. Open the notebook `Assignment2.ipynb` in Jupyter or VSCode.
-2. Follow each section to load images, detect features, compute transformations, and visualize results.
-3. Modify or extend the provided drawing utilities to suit your experimental needs.
+- Open `Assignment3.ipynb` in Jupyter or your preferred IDE *(**e.g.** VSCode)*.
+- Run each section sequentially to preprocess data, define the model, train it, and evaluate the results.
+- Complete the analysis section in the notebook or submit a separate PDF report detailing your findings.
