@@ -20,6 +20,9 @@ def train(dataloader, model, loss_fn, optimizer):
         Loss_fn (function): The loss function used to compute the error.
         Optimiser (torch.optim.Optimizer): The optimiser used to update the model parameters.
     """
+    # Get CPU or GPU Device for Training
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
     # Total Number of Samples in the Dataset
     size = len(dataloader.dataset)  
 
@@ -59,6 +62,9 @@ def test(dataloader, model, loss_fn):
     Prints:
         Average loss and overall accuracy on the test set.
     """
+    # Get CPU or GPU Device for Training
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
     # Total Number of Test Samples
     size = len(dataloader.dataset)      
 
@@ -94,8 +100,6 @@ def test(dataloader, model, loss_fn):
 
     # Display Evaluation Results
     print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
-
-
 
 
 
