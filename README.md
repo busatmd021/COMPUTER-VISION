@@ -1,21 +1,32 @@
-# Computer Vision - Semester Project Repository  
+# 📄 **Assignment 3 – Neural Network for Computer Vision using PyTorch**
+This assignment focuses on constructing and training a simple neural network using PyTorch for a basic computer vision task. It also includes a concise report analyzing the model’s performance and architecture decisions.
+<br/><br/>
 
-This repository contains coursework, assignments, and project work for my **Computer Vision** subject at the **University of Adelaide**. The focus of this semester includes:  
+## 🔍 **What’s Included**
+- **Dataset Preparation:** Loading and preprocessing image data for training and evaluation.
+- **Neural Network Architecture:** Implementing a custom feedforward neural network using PyTorch’s nn.Module.
+- **Training Loop:** Writing a training loop using PyTorch’s optimiser and loss modules.
+- **Evaluation:** Measuring performance on a test dataset using metrics such as accuracy or loss.
+- **Visualisation:** Displaying training loss curves and sample predictions for analysis.
+- **Report:** Discussion of architecture, training results, and any challenges encountered.
+<br/>
 
-## Topics Covered  
-- **Image Processing & Filtering**  
-  - Edge detection, thresholding, morphological operations  
-- **Feature Extraction & Object Recognition**  
-  - SIFT, ORB, HOG, CNN-based methods  
-- **Deep Learning for Vision**  
-  - Convolutional Neural Networks (CNNs), Transfer Learning  
-- **3D Vision & Depth Estimation**  
-  - Stereo vision, structure from motion  
-- **Applications in Robotics & Autonomous Systems**
-</br></br>
+## 🧰 **Files & Functions**
+- **SimpleNet:** Defines the architecture of the neural network *(**e.g.** fully connected layers, activation functions).*
+- `train_model(...)`: Handles model training, loss calculation, and optimisation steps.
+- `evaluate_model(...)`: Tests the trained model and generates evaluation metrics.
+- `plot_results(...)`: Plots training metrics and visual output samples.
+<br/>
 
-## Tech Stack  
-- **Programming Language**: Python  
-- **Libraries & Frameworks**: OpenCV, NumPy, TensorFlow/PyTorch  
+## 🧪 **Requirements**
+- Python 3.x
+- PyTorch
+- NumPy
+- Matplotlib
+- *(Optional)* OpenCV or torchvision, depending on preprocessing requirements
+<br/>
 
-This repo will be regularly updated with code implementations, reports, and insights from my coursework.  
+## 🚀 **How to Run**
+- Open `Assignment3.ipynb` in Jupyter or your preferred IDE *(**e.g.** VSCode)*.
+- Run each section sequentially to preprocess data, define the model, train it, and evaluate the results.
+- Complete the analysis section in the notebook or submit a separate PDF report detailing your findings.
