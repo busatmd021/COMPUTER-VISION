@@ -18,4 +18,4 @@ This repository contains coursework, assignments, and project work for my **Comp
 - **Programming Language**: Python  
 - **Libraries & Frameworks**: OpenCV, NumPy, TensorFlow/PyTorch  
 
-This repo will be regularly updated with code implementations, reports, and insights from my coursework. Stay tuned! 🚀  
+This repo will be regularly updated with code implementations, reports, and insights from my coursework.  
