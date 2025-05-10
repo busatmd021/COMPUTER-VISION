@@ -29,9 +29,6 @@ def train(dataloader, model, loss_fn, optimizer):
     # Set the Model to Training Mode (Enables Dropout, Batchnorm, etc.)
     model.train()  
 
-    # Store Loss for Each Batch
-    batch_losses = []  
-
     for batch, (X, y) in enumerate(dataloader):
         # Move Input Data & Labels to the Selected Device (CPU or GPU)
         X, y = X.to(device), y.to(device)
@@ -47,14 +44,10 @@ def train(dataloader, model, loss_fn, optimizer):
 
         # Print Loss Every 100 Batches for Progress Tracking
         if batch % 100 == 0:
-            loss_value = loss.item()
-            batch_losses.append(loss_value)
-        
-    # Retrn Losses
-    return batch_losses
+            current = batch * len(X)
+            print(f"loss: {loss.item():>7f}  [{current:>5d}/{size:>5d}]")
 
 
-## Define a Test Function
 def test(dataloader, model, loss_fn):
     """
     Evaluate the Model on the Test Dataset.
@@ -105,6 +98,74 @@ def test(dataloader, model, loss_fn):
 
     # Display Evaluation Results
     print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+
+    # Return Validation Loss
+    return test_loss
+
+
+def train_model(model, train_dataloader, test_dataloader, epochs = 10, lr = 1):
+    """
+    Train and test a model using the provided data loaders, loss function, and optimiser.
+
+    Args:
+        Model (torch.nn.Module): The neural network model to be trained.
+        Train_dataloader (DataLoader): The DataLoader for the training dataset.
+        Test_dataloader (DataLoader): The DataLoader for the testing dataset.
+        Epochs (int, optional): The number of training epochs (default is 10).
+        Lr (float, optional): The learning rate for the optimizer (default is 1).
+
+    Returns:
+        List: A list containing the validation loss after each epoch.
+    """
+    # Define the Loss Function & the Optimiser (learning Rate)
+    loss_fn = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr)   
+
+    # Prepare to Store Loss
+    val_loss = []
+
+    # Train & Test the Model
+    for t in range(epochs):  
+        print(f"Epoch {t+1}\n-------------------------------")
+
+        # Train and collect batch losses
+        train(train_dataloader, model, loss_fn, optimizer)
+
+        # Run testing
+        loss = test(test_dataloader, model, loss_fn)
+        val_loss.append(loss)
+    print("Done!")
+
+    return val_loss
+
+
+def display_loss(title, x_label, y_label, val_loss, epochs = 10):
+    """
+    Display the loss over epochs as a line plot.
+
+    Args:
+        Title (str): The title of the plot.
+        X_label (str): The label for the x-axis.
+        Y_label (str): The label for the y-axis.
+        Val_loss (list): A list of validation losses for each epoch.
+        Epochs (int, optional): The number of epochs (default is 10).
+    """
+    # Create a Figure for the Plot with a Specified Size
+    plt.figure(figsize=(8, 5))
+
+    # Plot the Validation Loss Over the Epochs
+    plt.plot(range(1, epochs + 1), val_loss, marker='o')
+
+    # Label the Axes & Add a Title
+    plt.xlabel(x_label, fontweight="bold")
+    plt.ylabel(y_label, fontweight="bold")
+    plt.title(title, fontweight="bold")
+
+    # Display Gridlines for Better Readability
+    plt.grid(True)
+
+    # Show the Plot
+    plt.show()
 
 
 
