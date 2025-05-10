@@ -29,6 +29,9 @@ def train(dataloader, model, loss_fn, optimizer):
     # Set the Model to Training Mode (Enables Dropout, Batchnorm, etc.)
     model.train()  
 
+    # Store Loss for Each Batch
+    batch_losses = []  
+
     for batch, (X, y) in enumerate(dataloader):
         # Move Input Data & Labels to the Selected Device (CPU or GPU)
         X, y = X.to(device), y.to(device)
@@ -45,8 +48,10 @@ def train(dataloader, model, loss_fn, optimizer):
         # Print Loss Every 100 Batches for Progress Tracking
         if batch % 100 == 0:
             loss_value = loss.item()
-            current = batch * len(X)
-            print(f"loss: {loss_value:>7f}  [{current:>5d}/{size:>5d}]")
+            batch_losses.append(loss_value)
+        
+    # Retrn Losses
+    return batch_losses
 
 
 ## Define a Test Function
