@@ -1,12 +1,14 @@
 # ASSIGNMENT 3 CODE TO SUPPORT NOTEBOOK
 
 # ----------- Import Libraries -----------
+import matplotlib.pyplot as plt
+import numpy as np
+
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision.transforms import ToTensor, Lambda, Compose
-import matplotlib.pyplot as plt
 
 
 # ----------- PART 1 -----------
@@ -29,6 +31,10 @@ def train(dataloader, model, loss_fn, optimizer):
     # Set the Model to Training Mode (Enables Dropout, Batchnorm, etc.)
     model.train()  
 
+    # Gather Gradient Loss
+    grad_means = []
+    max_steps = 100  # First 100 steps only
+
     for batch, (X, y) in enumerate(dataloader):
         # Move Input Data & Labels to the Selected Device (CPU or GPU)
         X, y = X.to(device), y.to(device)
@@ -40,12 +46,26 @@ def train(dataloader, model, loss_fn, optimizer):
         # Backpropagation: Compute Gradients & Update Parameters
         optimizer.zero_grad()   # Clear Previous Gradients
         loss.backward()         # Backpropagate the Error
-        optimizer.step()        # Update Model Parameters
+
+        # Track Gradient Mean
+        if batch < max_steps:
+            # Collect all Gradients into One Vector
+            grads = [p.grad.view(-1) for p in model.parameters() if p.grad is not None]
+            all_grads = torch.cat(grads)
+
+            # Calculate the Mean Absolute Gradient
+            grad_means.append(all_grads.abs().mean().item()) 
+
+        # Update Model Parameters
+        optimizer.step()        
 
         # Print Loss Every 100 Batches for Progress Tracking
         if batch % 100 == 0:
             current = batch * len(X)
             print(f"loss: {loss.item():>7f}  [{current:>5d}/{size:>5d}]")
+    
+    # Return the Gradient Loss
+    return grad_means
 
 
 def test(dataloader, model, loss_fn):
@@ -126,21 +146,27 @@ def train_model(model, train_dataloader, test_dataloader, epochs = 10, lr = 1):
     # Prepare to Store Loss & Accuracy
     val_loss = []
     val_accuracy = []
+    grad_loss = []
 
     # Train & Test the Model
     for t in range(epochs):  
         print(f"Epoch {t+1}\n-------------------------------")
 
-        # Train and collect batch losses
-        train(train_dataloader, model, loss_fn, optimizer)
+        # Train & Collect Batch Losses
+        gradient = train(train_dataloader, model, loss_fn, optimizer)
 
-        # Run testing
+        # Update Gradient Loss
+        if t == 0:
+            grad_loss.append(gradient)
+        
+        # Run Testing
         loss, accuracy = test(test_dataloader, model, loss_fn)
         val_loss.append(loss)
         val_accuracy.append(accuracy)
     print("Done!")
 
-    return val_loss, val_accuracy
+    # Return Data
+    return val_loss, val_accuracy, grad_loss
 
 
 def count_trainable_params(model):
@@ -149,7 +175,7 @@ def count_trainable_params(model):
 
     This function iterates over all parameters of the model using `model.parameters()`,
     which returns all the parameters (weights and biases) in the model.
-    
+
     It filters only those parameters where `p.requires_grad` is True,
     meaning that gradients will be computed for them during backpropagation
     (i.e., they are trainable).
