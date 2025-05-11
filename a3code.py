@@ -14,7 +14,8 @@ from torchvision.transforms import ToTensor, Lambda, Compose
 # ----------- PART 1 -----------
 def train(dataloader, model, loss_fn, optimizer):
     """
-    In a single training loop, the model makes predictions on the training dataset (fed to it in batches), and backpropagates the prediction error to adjust the models' parameters.
+    In a single training loop, the model makes predictions on the training dataset (fed to it in batches), 
+    and backpropagates the prediction error to adjust the models' parameters.
 
     Args:
         Dataloader (DataLoader): The training data loader.
@@ -139,7 +140,7 @@ def train_model(model, train_dataloader, test_dataloader, epochs = 10, lr = 1):
         List: A list containing the validation Accuracy after each epoch.
 
     """
-    # Define the Loss Function & the Optimiser (learning Rate)
+    # Define the Loss Function & the Optimiser (Learning Rate)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr)   
 
@@ -163,6 +164,8 @@ def train_model(model, train_dataloader, test_dataloader, epochs = 10, lr = 1):
         loss, accuracy = test(test_dataloader, model, loss_fn)
         val_loss.append(loss)
         val_accuracy.append(accuracy)
+
+    # Confirm Completion
     print("Done!")
 
     # Return Data
@@ -249,8 +252,9 @@ def display_loss_accuracy(global_title, val_loss, accuracy, epochs=10):
     axes[1].set_ylabel("Validation Accuracy (%)")
     axes[1].grid(True)
 
-    plt.tight_layout(rect=[0, 0, 1, 0.95])  # Leave space for Global Title
+    plt.tight_layout(rect=[0, 0, 1, 0.95])  # Leave Space for Global Title
     plt.show()
+
 
 
 # ----------- PART 2 -----------
