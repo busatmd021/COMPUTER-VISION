@@ -100,7 +100,7 @@ def test(dataloader, model, loss_fn):
     print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
 
     # Return Validation Loss
-    return test_loss
+    return test_loss, (100*correct)
 
 
 def train_model(model, train_dataloader, test_dataloader, epochs = 10, lr = 1):
@@ -116,13 +116,16 @@ def train_model(model, train_dataloader, test_dataloader, epochs = 10, lr = 1):
 
     Returns:
         List: A list containing the validation loss after each epoch.
+        List: A list containing the validation Accuracy after each epoch.
+
     """
     # Define the Loss Function & the Optimiser (learning Rate)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr)   
 
-    # Prepare to Store Loss
+    # Prepare to Store Loss & Accuracy
     val_loss = []
+    val_accuracy = []
 
     # Train & Test the Model
     for t in range(epochs):  
@@ -132,11 +135,35 @@ def train_model(model, train_dataloader, test_dataloader, epochs = 10, lr = 1):
         train(train_dataloader, model, loss_fn, optimizer)
 
         # Run testing
-        loss = test(test_dataloader, model, loss_fn)
+        loss, accuracy = test(test_dataloader, model, loss_fn)
         val_loss.append(loss)
+        val_accuracy.append(accuracy)
     print("Done!")
 
-    return val_loss
+    return val_loss, val_accuracy
+
+
+def count_trainable_params(model):
+    """
+    Counts the total number of trainable parameters in a PyTorch model.
+
+    This function iterates over all parameters of the model using `model.parameters()`,
+    which returns all the parameters (weights and biases) in the model.
+    
+    It filters only those parameters where `p.requires_grad` is True,
+    meaning that gradients will be computed for them during backpropagation
+    (i.e., they are trainable).
+
+    For each trainable parameter, `p.numel()` returns the total number of elements,
+    and the function sums these to give the total number of trainable parameters.
+
+    Args:
+        model (torch.nn.Module): The PyTorch model to inspect.
+
+    Returns:
+        int: The total number of trainable parameters.
+    """
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 
 def display_loss(title, x_label, y_label, val_loss, epochs = 10):
@@ -167,6 +194,37 @@ def display_loss(title, x_label, y_label, val_loss, epochs = 10):
     # Show the Plot
     plt.show()
 
+
+def display_loss_accuracy(global_title, val_loss, accuracy, epochs=10):
+    """
+    Display the validation loss and accuracy over epochs as side-by-side line plots.
+
+    Args:
+        global_title (str): The title for the entire figure.
+        val_loss (list): Validation loss values.
+        accuracy (list): Accuracy values.
+        epochs (int): Number of training epochs.
+    """
+    # Build Subplots
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    fig.suptitle(global_title, fontsize=16, fontweight='bold')
+
+    # Plot Validation Loss
+    axes[0].plot(range(1, epochs + 1), val_loss, marker='o', color='red')
+    axes[0].set_title("Validation Loss Curve")
+    axes[0].set_xlabel("Epochs")
+    axes[0].set_ylabel("Validation Loss")
+    axes[0].grid(True)
+
+    # Plot Accuracy
+    axes[1].plot(range(1, epochs + 1), accuracy, marker='o', color='blue')
+    axes[1].set_title("Validation Accuracy")
+    axes[1].set_xlabel("Epochs")
+    axes[1].set_ylabel("Validation Accuracy (%)")
+    axes[1].grid(True)
+
+    plt.tight_layout(rect=[0, 0, 1, 0.95])  # Leave space for Global Title
+    plt.show()
 
 
 # ----------- PART 2 -----------
