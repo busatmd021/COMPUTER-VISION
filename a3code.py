@@ -1,6 +1,6 @@
 # ASSIGNMENT 3 CODE TO SUPPORT NOTEBOOK
 
-# ----------- Import Libraries -----------
+# ----------- IMPORT LIBRARIES -----------
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -11,7 +11,7 @@ from torchvision import datasets
 from torchvision.transforms import ToTensor, Lambda, Compose
 
 
-# ----------- PART 1 -----------
+# ----------- PART 1 & 2 CODE -----------
 def train(dataloader, model, loss_fn, optimizer):
     """
     In a single training loop, the model makes predictions on the training dataset (fed to it in batches), 
@@ -36,6 +36,9 @@ def train(dataloader, model, loss_fn, optimizer):
     grad_means = []
     max_steps = 100  # First 100 steps only
 
+    # Detect if the Model is a CNN by Checking for a Conv1 Layer
+    is_cnn = hasattr(model, "conv1") and isinstance(model.conv1, nn.Conv2d)
+
     for batch, (X, y) in enumerate(dataloader):
         # Move Input Data & Labels to the Selected Device (CPU or GPU)
         X, y = X.to(device), y.to(device)
@@ -50,12 +53,22 @@ def train(dataloader, model, loss_fn, optimizer):
 
         # Track Gradient Mean
         if batch < max_steps:
-            # Collect all Gradients into One Vector
-            grads = [p.grad.view(-1) for p in model.parameters() if p.grad is not None]
-            all_grads = torch.cat(grads)
+            # Find Gradient of the Loss for CNN
+            if is_cnn and model.conv1.weight.grad is not None:
+                # Calculate the Mean Absolute Gradient
+                grad_mean = model.conv1.weight.grad.abs().mean().item()
+                grad_means.append(grad_mean)
 
-            # Calculate the Mean Absolute Gradient
-            grad_means.append(all_grads.abs().mean().item()) 
+            # For the Normal MLP Models
+            else:
+                # Collect all Gradients into One Vector
+                grads = [p.grad.view(-1) for p in model.parameters() if p.grad is not None]
+                
+                # Make Sure Gradient Storage is Not Empty
+                if grads:
+                    # Calculate the Mean Absolute Gradient
+                    all_grads = torch.cat(grads)
+                    grad_means.append(all_grads.abs().mean().item())
 
         # Update Model Parameters
         optimizer.step()        
@@ -254,7 +267,3 @@ def display_loss_accuracy(global_title, val_loss, accuracy, epochs=10):
 
     plt.tight_layout(rect=[0, 0, 1, 0.95])  # Leave Space for Global Title
     plt.show()
-
-
-
-# ----------- PART 2 -----------
