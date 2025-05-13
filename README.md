@@ -1,6 +1,7 @@
 # 📄 **Assignment 3 – Neural Network for Computer Vision using PyTorch**
 
 This assignment focuses on constructing and training a simple neural network using PyTorch for a basic computer vision task. It also includes a concise report analyzing the model’s performance and architecture decisions.  
+&nbsp;  
 
 ## 🔍 **What’s Included**
 
@@ -10,13 +11,15 @@ This assignment focuses on constructing and training a simple neural network usi
 - **Evaluation:** Measuring performance on a test dataset using metrics such as accuracy or loss.
 - **Visualisation:** Displaying training loss curves and sample predictions for analysis.
 - **Report:** Discussion of architecture, training results, and any challenges encountered.  
-  
+&nbsp;  
+
 ## 🧰 **Files & Functions**
 
 - **SimpleNet:** Defines the architecture of the neural network *(**e.g.** fully connected layers, activation functions).*
 - `train_model(...)`: Handles model training, loss calculation, and optimisation steps.
 - `evaluate_model(...)`: Tests the trained model and generates evaluation metrics.
 - `plot_results(...)`: Plots training metrics and visual output samples.  
+&nbsp;  
 
 ## 🧪 **Requirements**
 
@@ -25,6 +28,7 @@ This assignment focuses on constructing and training a simple neural network usi
 - NumPy
 - Matplotlib
 - *(Optional)* OpenCV or torchvision, depending on preprocessing requirements.  
+&nbsp;  
 
 ## 🚀 **How to Run**
 
