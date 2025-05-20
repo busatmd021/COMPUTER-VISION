@@ -55,8 +55,8 @@ def train(dataloader, model, loss_fn, optimizer):
         if batch < max_steps:
             # Find Gradient of the Loss for CNN
             if is_cnn and model.conv1.weight.grad is not None:
-                # Calculate the Mean Absolute Gradient
-                grad_mean = model.conv1.weight.grad.abs().mean().item()
+                # Calculate the Mean Gradient
+                grad_mean = model.conv1.weight.grad.mean().item()
                 grad_means.append(grad_mean)
 
             # For the Normal MLP Models
@@ -66,9 +66,9 @@ def train(dataloader, model, loss_fn, optimizer):
                 
                 # Make Sure Gradient Storage is Not Empty
                 if grads:
-                    # Calculate the Mean Absolute Gradient
+                    # Calculate the Mean Gradient
                     all_grads = torch.cat(grads)
-                    grad_means.append(all_grads.abs().mean().item())
+                    grad_means.append(all_grads.mean().item())
 
         # Update Model Parameters
         optimizer.step()        
