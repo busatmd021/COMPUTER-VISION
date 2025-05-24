@@ -101,8 +101,7 @@ We introduced several changes to enhance both **accuracy** and **efficiency**:
 
 ## 🙋‍♂️ Authors
 
-* Maxwell Busato & Liam Hennig
+* Maxwell Busato
+* Liam Hennig
 
 ---
-
-Let me know if you'd like me to generate a starter version of the `.ipynb` structure or the PDF report template as well.
