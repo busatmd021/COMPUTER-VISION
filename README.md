@@ -62,10 +62,10 @@ We introduced several changes to enhance both **accuracy** and **efficiency**:
 | Metric                        | Value          |
 | ----------------------------- | -------------- |
 | **Baseline Accuracy**         |  28% *(0.28)*  |
-| **Improved Accuracy**         | 38% *(0.3777)* |
+| **Improved Accuracy**         | 42% *(0.4119)* |
 | **Baseline GFLOPs**           |  67 *(66.97)*  |
-| **Improved Model GFLOPs**     | 217 *(217.17)*  |
-| **Efficiency (Acc / GFLOPs)** | 0.00174 *(bigger is better)*  |
+| **Improved Model GFLOPs**     | 227 *(227.69)*  |
+| **Efficiency (Acc / GFLOPs)** | 0.00184 *(bigger is better)*  |
 
 *Detailed results, analysis, and limitations are documented in the report.*
 
