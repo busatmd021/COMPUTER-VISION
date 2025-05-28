@@ -45,7 +45,7 @@ We introduced several changes to enhance both **accuracy** and **efficiency**:
 
 * Added **Random Horizontal Flip**, **Color Jitter**, and **Random Crop/Resize** to name a few.
 
-### ⚙️ Efficiency-Oriented Modifications
+### Efficiency-Oriented Modifications
 
 * Pruned redundant layers.
 * Tracked computational cost (GFLOPs) using `ptflops`.
