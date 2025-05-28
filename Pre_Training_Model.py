@@ -30,8 +30,8 @@ LEARNING_RATE = 1e-3
 EPOCHS = 50
 MODEL_SAVE_PATH = "./Models/pretrained_weights.pth"
 LOG_DIR = "./logs"
-TRAIN_DIR = "./CityScapes-Dataset"
-TEST_DIR = "./CityScapes-Dataset"
+TRAIN_DIR = "./PreTraining_Data"
+TEST_DIR = "./PreTraining_Data"
 NUM_CLASSES = 19
 
 
