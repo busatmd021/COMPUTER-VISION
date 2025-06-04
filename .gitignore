@@ -169,3 +169,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Ignore Data Files
+/Data/
+/Models/
+*.pth
