@@ -1,0 +1,28 @@
+# Core Machine Learning
+torch>=2.7.0
+torchvision>=0.22.0
+torchaudio>=2.7.0
+segmentation-models-pytorch==0.5.0
+
+# Image Processing
+albumentations==2.0.7
+opencv-python>=4.10.0
+Pillow>=11.2.1
+numpy>=2.2.5
+matplotlib>=3.10.3
+
+# Model Utilities
+torchinfo==1.8.0
+fvcore==0.1.5.post20221221
+gdown>=5.2.0
+
+# Jupyter Notebook Support
+ipython>=8.0.0
+ipykernel>=6.0.0
+jupyterlab>=4.0.0
+notebook>=7.0.0
+ipywidgets>=8.0.0
+widgetsnbextension>=4.0.0
+
+# Optional Utilities (Nice to Have)
+tqdm>=4.60.0
