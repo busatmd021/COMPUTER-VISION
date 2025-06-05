@@ -8,7 +8,7 @@ This repository contains the submission for **Assignment 4** of the Computer Vis
 
 ## 📝 Task Description
 
-We chose **Competition 3: Road Segmentation**, which involves:
+I chose **Competition 3: Road Segmentation**, which involves:
 
 - **Dataset**: 150 training images, each sized approximately 800 × 256 pixels.
 - **Classes**: 19 semantic classes.
@@ -31,7 +31,7 @@ The baseline model provided includes the following components:
 
 ## 🚀 Our Improvements
 
-We introduced several changes to enhance both **accuracy** and **efficiency**:
+I introduced several changes to enhance both **accuracy** and **efficiency**:
 
 ### Model & Training Enhancements
 
@@ -58,7 +58,7 @@ We introduced several changes to enhance both **accuracy** and **efficiency**:
 
 ### SegFormer with EfficientNet-B3 Backbone
 
-Later, we extended our experiments to include a more advanced model architecture. We integrated a prebuilt **SegFormer** implementation using **EfficientNet-B3** as the encoder. This model was **pretrained on ImageNet**, providing strong feature extraction from the start. While significantly more computationally expensive, it yielded:
+Later, I extended our experiments to include a more advanced model architecture. I integrated a prebuilt **SegFormer** implementation using **EfficientNet-B3** as the encoder. This model was **pretrained on ImageNet**, providing strong feature extraction from the start. While significantly more computationally expensive, it yielded:
 
 - Improved segmentation accuracy  
 - Smoother mask outputs  
@@ -66,13 +66,13 @@ Later, we extended our experiments to include a more advanced model architecture
 
 This model served as a valuable performance benchmark and helped validate that our lightweight U-Net trade-off was effective for constrained settings.
 
-We also experimented with **SegFormer B2**, which provided a strong balance of improvement over the baseline in both **accuracy** and **efficiency**.
+I also experimented with **SegFormer B2**, which provided a strong balance of improvement over the baseline in both **accuracy** and **efficiency**.
 
 ---
 
 ## 📊 Visual Results
 
-To evaluate model behavior, we tracked training and validation metrics over time and inspected segmentation outputs.
+To evaluate model behavior, I tracked training and validation metrics over time and inspected segmentation outputs.
 
 ### Training Curves
 
@@ -157,7 +157,5 @@ Below are sample predictions from the **SegFormer** models, compared to the U-Ne
 ## 👥 Authors
 
 - **Maxwell Busato**  
-- **Liam Hennig**
 
 ---
-
